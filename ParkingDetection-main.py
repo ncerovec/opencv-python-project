@@ -7,10 +7,10 @@ from ImageProcessing import ProcessingGray as pg
 from ImageProcessing import ProcessingColor as pc
 from ImageFeaturing import FeatureDetection as fd
 from ImagePreview import ImagePreview as ip
+from RectSizeSelection import RectSelection
 
 #TODO:
     #Order image processing and filtering for best results
-    #Implement marking of parking spot size by user
     #Implement parking spot size detection (average of most of contures with size ratio 2:3)
     #Detect cars and parking spots - print the number of empty and full parking spots
 
@@ -20,6 +20,10 @@ dataFolder = './DATA/parking-sample/'
 #Load an image modes: #1/cv2.IMREAD_COLOR #0/cv2.IMREAD_GRAYSCALE #-1/cv2.IMREAD_UNCHANGED
 img = cv2.imread(dataFolder+imgName,1)
 
+#-> Parking spot size marking
+rs = RectSelection(ih.copyImage(img))
+rectWidth, rectHeight = rs.getRectSize()
+print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
 
 #-> Image processing
 ftrImg = ih.copyImage(img)
