@@ -8,6 +8,12 @@ from ImageProcessing import ProcessingColor as pc
 from ImageFeaturing import FeatureDetection as fd
 from ImagePreview import ImagePreview as ip
 
+#TODO:
+    #Order image processing and filtering for best results
+    #Implement marking of parking spot size by user
+    #Implement parking spot size detection (average of most of contures with size ratio 2:3)
+    #Detect cars and parking spots - print the number of empty and full parking spots
+
 imgName = 'parking-full-top.jpg'
 dataFolder = './DATA/parking-sample/'
 
