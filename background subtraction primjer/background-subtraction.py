@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+PARKING_SPACES = 40
 
 def detectSqrContours(img):
     contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -11,13 +12,16 @@ def grayScale(img):
     return gray
 
 def drawContours(img, contours):
+    global PARKING_SPACES
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+        if w > 50 and h > 25:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+            PARKING_SPACES -= 1
     return img
 
 backgroundImage = cv2.imread('empty.png',1)
-currentImage = cv2.imread('parking3.png',1)
+currentImage = cv2.imread('parking2.png',1)
 diffImage = cv2.absdiff(backgroundImage, currentImage)
 
 '''
@@ -43,7 +47,11 @@ while i<imageHeight:
 '''
 contours = detectSqrContours(grayScale(diffImage))
 
+
+
 result = drawContours(currentImage, contours)
+
+print 'Slobodnih mjesta: '+str(PARKING_SPACES)
 
 cv2.imshow('result',result)
 #cv2.imshow('result2',foregroundMask)
