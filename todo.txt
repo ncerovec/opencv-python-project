@@ -1,0 +1,23 @@
+Constraints:
+	version1:
+		- top view only
+		- one parking lot
+			-optional - generalize algorithm
+		- pakinglot-full.jpg
+	
+	version2:
+		- pklot + xml
+	
+
+
+Progress:
+
+Version 1:
+	till saturday:
+		- make better preprocessig - BRUNO
+		- try to find better cotours filter - BRUNO
+
+
+Version 2:
+	till saturday:
+		-parse XML and draw recktangles - BRUNO
