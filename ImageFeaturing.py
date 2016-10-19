@@ -33,14 +33,34 @@ class FeatureDetection(object):
             cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),1)
         return img
 
-    #Draw certain size contours in array
+    #Draw certain size contours in array (deviation = %/100)
     @staticmethod
-    def drawSizedContours(img, contours):
+    def drawSizedContours(img, contours, width, height, deviation):
+        devWidth = width*deviation
+        devHeight = height*deviation
+        minWidth = width-devWidth
+        maxWidth = width+devWidth
+        minHeight = height-devHeight
+        maxHeight = height+devHeight
+        
         for contour in contours:
             x,y,w,h = cv2.boundingRect(contour)
-            #if(cv2.contourArea(rect) >= 2000 & (h/w) > 1.0):
-            if(h*w >= 10000 and h*w <= 15000):
-                #print h*w  #print contour sizes
+            if(w > minWidth and w < 100 and h > 100 and h < 150):
+                cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),1)
+        return img
+
+    #Draw certain aspect ratio contours in array (ratio=height:width) (deviation = ratio-part)
+    def drawRatioContours(img, contours, ratio, deviation):
+        minRatio = ratio - deviation
+        maxRatio = ratio + deviation
+        
+        for contour in contours:
+            x,y,w,h = cv2.boundingRect(contour)
+            contRatio = float(h)/float(w)
+            #print contRatio
+            
+            #filtering contours by width and height ratio
+            if(contRatio > 1.8 and contRatio < 2.3):
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),1)
         return img
         

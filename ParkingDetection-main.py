@@ -21,9 +21,10 @@ dataFolder = './DATA/parking-sample/'
 img = cv2.imread(dataFolder+imgName,1)
 
 #-> Parking spot size marking
-#rs = RectSelection(ih.copyImage(img))
-#rectWidth, rectHeight = rs.getRectSize()
-#print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
+print "Select parking spot size and press Enter:"
+rs = RectSelection(ih.copyImage(img))
+rectWidth, rectHeight = rs.getRectSize()
+print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
 
 #-> Image processing
 ftrImg = ih.copyImage(img)
@@ -62,7 +63,8 @@ dtcImg = ih.copyImage(result)
 contours = fd.detectSqrContours(dtcImg)
 #img = fd.drawBiggestContour(img, contours)
 #img = fd.drawContours(img, contours)
-img = fd.drawSizedContours(img, contours)
+img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.1)
+#img = fd.drawRatioContours(img, contours, 2, 0.2)
 
 
 #-> Image result preview
