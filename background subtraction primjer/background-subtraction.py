@@ -20,8 +20,8 @@ def drawContours(img, contours):
             PARKING_SPACES -= 1
     return img
 
-backgroundImage = cv2.imread('empty.png',1)
-currentImage = cv2.imread('parking2.png',1)
+backgroundImage = cv2.imread('empty.jpg',1)
+currentImage = cv2.imread('parkinglot.jpg',1)
 diffImage = cv2.absdiff(backgroundImage, currentImage)
 
 '''
