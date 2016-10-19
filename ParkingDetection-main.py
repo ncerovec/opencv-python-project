@@ -21,13 +21,25 @@ dataFolder = './DATA/parking-sample/'
 img = cv2.imread(dataFolder+imgName,1)
 
 #-> Parking spot size marking
-rs = RectSelection(ih.copyImage(img))
-rectWidth, rectHeight = rs.getRectSize()
-print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
+#rs = RectSelection(ih.copyImage(img))
+#rectWidth, rectHeight = rs.getRectSize()
+#print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
 
 #-> Image processing
 ftrImg = ih.copyImage(img)
 
+#hsv = pc.hsvScale(ftrImg)
+#h,s,v = cv2.split(hsv)
+#v = pg.equHist(v)
+#hsv = cv2.merge((h, s, v))
+#ftrImg = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+blur = pc.gaussBlur(ftrImg)
+mean = pc.meanShift(blur)
+gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
+adpThresh = pg.threshAdptGauss(gray)
+result = adpThresh
+    
+'''
 claColor = pc.claheColor(ftrImg)
 meanShift = pc.meanShift(ftrImg)
 gray = pc.grayScale(ftrImg)
@@ -39,10 +51,11 @@ adptThreshGauss = pg.threshAdptGauss(gray)
 dilation = pg.dilation(thresh)
 closing = pg.closing(thresh)
 canny = pg.canny(gray)
-
+result = canny
+'''
 
 #-> Image feature detection
-dtcImg = ih.copyImage(canny)
+dtcImg = ih.copyImage(result)
 
 #img = fd.drawLines(img, fd.detectLines(dtcImg))
 
@@ -55,13 +68,18 @@ img = fd.drawSizedContours(img, contours)
 #-> Image result preview
 
 #Images arrays
-titles = ['Original', 'EquHist', 'Clahe', 'Mean Shift', 'Gray', 'Clahe Gray', 'Otsu', 'Adaptive Mean', 'Adaptive Gauss', 'Dilation', 'Closing', 'Canny']
-images = [img, equ, claColor, meanShift, gray, claGray, thresh, adptThreshMean, adptThreshGauss, dilation, closing, canny]
+#titles = ['Original', 'EquHist', 'Clahe', 'Mean Shift', 'Gray', 'Clahe Gray', 'Otsu', 'Adaptive Mean', 'Adaptive Gauss', 'Dilation', 'Closing', 'Canny']
+#images = [img, equ, claColor, meanShift, gray, claGray, thresh, adptThreshMean, adptThreshGauss, dilation, closing, canny]
+#titles = ['Original', 'HSV', 'V-channel', 'Blur', 'Mean', 'Gray', 'Adp Thresh Gauss']
+#images = [img, hsv, v, blur, mean, gray, adpThresh]
+titles = ['Original', 'Blur', 'Mean', 'Gray', 'Adp Thresh Gauss']
+images = [img, blur, mean, gray, adpThresh]
+
 
 ip.showAdvanced(images, titles)
 
 img1 = img
-img2 = claColor
+img2 = result
 cv2.imshow('comparison',ip.stackImages(img1, img2))
 
 cv2.imshow('result',img)

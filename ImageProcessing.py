@@ -32,8 +32,9 @@ class ProcessingGray(object):
     #Adaptive Gauss Threshold
     @staticmethod
     def threshAdptGauss(img):
-        adptThreshGauss = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
-        return adptThreshGauss
+        #adptThreshGauss = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        adptThreshGauss = cv2.adaptiveThreshold(img, 230, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 13, 0)
+        return adptThreshGauss        
 
     #Dilation
     @staticmethod
@@ -65,11 +66,23 @@ class ProcessingColor(object):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return gray
 
+    #HSV colorscale
+    @staticmethod
+    def hsvScale(img):
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        return hsv
+
+    #GaussianBlur
+    @staticmethod
+    def gaussBlur(img):
+        blur = cv2.GaussianBlur(img, (3,3), 0, 0, cv2.BORDER_DEFAULT)
+        return blur
+
     #Clahe - Color
     @staticmethod
     def claheColor(img):
         #LabColorSpace
-        lab = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
+        lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
         labChannels = cv2.split(lab)
         #apply the CLAHE algorithm to the L channel
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8)) #clahe->setClipLimit(4);
@@ -85,7 +98,7 @@ class ProcessingColor(object):
     @staticmethod
     def meanShift(img):
         spatialRadius = 20
-        colorRadius = 10
-        maxPyrLevel = 1
+        colorRadius = 20
+        maxPyrLevel = 3
         meanShift = cv2.pyrMeanShiftFiltering(img, spatialRadius, colorRadius, maxPyrLevel)
         return meanShift
