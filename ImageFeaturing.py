@@ -50,6 +50,7 @@ class FeatureDetection(object):
         return img
 
     #Draw certain aspect ratio contours in array (ratio=height:width) (deviation = ratio-part)
+    @staticmethod
     def drawRatioContours(img, contours, ratio, deviation):
         minRatio = ratio - deviation
         maxRatio = ratio + deviation

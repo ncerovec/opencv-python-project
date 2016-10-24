@@ -14,16 +14,17 @@ from RectSizeSelection import RectSelection
     #Implement parking spot size detection (average of most of contures with size ratio 2:3)
     #Detect cars and parking spots - print the number of empty and full parking spots
 
-imgName = 'parking-full-top.jpg'
+imgName = 'parking-full-top-small.jpg'
 dataFolder = './DATA/parking-sample/'
 
 #Load an image modes: #1/cv2.IMREAD_COLOR #0/cv2.IMREAD_GRAYSCALE #-1/cv2.IMREAD_UNCHANGED
 img = cv2.imread(dataFolder+imgName,1)
 
 #-> Parking spot size marking
-print "Select parking spot size and press Enter:"
-rs = RectSelection(ih.copyImage(img))
-rectWidth, rectHeight = rs.getRectSize()
+#print "Select parking spot size and press Enter:"
+#rs = RectSelection(ih.copyImage(img))
+#rectWidth, rectHeight = rs.getRectSize()
+rectWidth, rectHeight = 60,110
 print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
 
 #-> Image processing
@@ -34,12 +35,18 @@ ftrImg = ih.copyImage(img)
 #v = pg.equHist(v)
 #hsv = cv2.merge((h, s, v))
 #ftrImg = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-blur = pc.gaussBlur(ftrImg)
+blur = pc.medianBlur(ftrImg)
 mean = pc.meanShift(blur)
+colRange = pc.colorRange(mean)
+
 gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
 adpThresh = pg.threshAdptGauss(gray)
-result = adpThresh
-    
+
+res = cv2.bitwise_and(colRange,adpThresh)
+gradient = pg.gradient(res)
+closing = pg.closing(res)
+result = closing
+
 '''
 claColor = pc.claheColor(ftrImg)
 meanShift = pc.meanShift(ftrImg)
@@ -63,7 +70,7 @@ dtcImg = ih.copyImage(result)
 contours = fd.detectSqrContours(dtcImg)
 #img = fd.drawBiggestContour(img, contours)
 #img = fd.drawContours(img, contours)
-img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.1)
+img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.3)
 #img = fd.drawRatioContours(img, contours, 2, 0.2)
 
 
@@ -74,8 +81,8 @@ img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.1)
 #images = [img, equ, claColor, meanShift, gray, claGray, thresh, adptThreshMean, adptThreshGauss, dilation, closing, canny]
 #titles = ['Original', 'HSV', 'V-channel', 'Blur', 'Mean', 'Gray', 'Adp Thresh Gauss']
 #images = [img, hsv, v, blur, mean, gray, adpThresh]
-titles = ['Original', 'Blur', 'Mean', 'Gray', 'Adp Thresh Gauss']
-images = [img, blur, mean, gray, adpThresh]
+titles = ['Original', 'Blur', 'Mean', 'Color-Range', 'Gray', 'Thresh', 'Gradient', 'Closing']
+images = [img, blur, mean, colRange, gray, adpThresh, gradient, closing]
 
 
 ip.showAdvanced(images, titles)
