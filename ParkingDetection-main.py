@@ -14,11 +14,13 @@ from RectSizeSelection import RectSelection
     #Implement parking spot size detection (average of most of contures with size ratio 2:3)
     #Detect cars and parking spots - print the number of empty and full parking spots
 
-imgName = 'parking-full-top-small.jpg'
-dataFolder = './DATA/parking-sample/'
+imgName = './parking-full-top-small.jpg'
+imgSave = './parking-detect.png'
+sampleFolder = './parking-sample/'
+dataFolder = './DATA/'
 
 #Load an image modes: #1/cv2.IMREAD_COLOR #0/cv2.IMREAD_GRAYSCALE #-1/cv2.IMREAD_UNCHANGED
-img = cv2.imread(dataFolder+imgName,1)
+img = cv2.imread(dataFolder+sampleFolder+imgName,1)
 
 #-> Parking spot size marking
 #print "Select parking spot size and press Enter:"
@@ -84,7 +86,6 @@ img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.3)
 titles = ['Original', 'Blur', 'Mean', 'Color-Range', 'Gray', 'Thresh', 'Gradient', 'Closing']
 images = [img, blur, mean, colRange, gray, adpThresh, gradient, closing]
 
-
 ip.showAdvanced(images, titles)
 
 img1 = img
@@ -100,5 +101,5 @@ k = cv2.waitKey(0)
 if k == 27:         # wait for ESC key to exit
     cv2.destroyAllWindows()
 elif k == ord('s'): # wait for 's' key to save and exit
-    cv2.imwrite(dataFolder+'parking-detect.png',img)
+    cv2.imwrite(dataFolder+imgSave,img)
     cv2.destroyAllWindows()
