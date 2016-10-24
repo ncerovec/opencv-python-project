@@ -8,7 +8,7 @@ from ImageProcessing import ProcessingColor as pc
 from ImageFeaturing import FeatureDetection as fd
 from ImagePreview import ImagePreview as ip
 from RectSizeSelection import RectSelection
-from FileOperations import FileOperations
+#from FileOperations import FileOperations
 
 #TODO:
     #Order image processing and filtering for best results
@@ -21,11 +21,11 @@ imgSave = './parking-detect.png'
 sampleFolder = './parking-sample/'
 dataFolder = './DATA/'
 
-#filePath = dataFolder+sampleFolder+imgOpen
+filePath = dataFolder+sampleFolder+imgOpen
 
 #Open file select dialog
-fo = FileOperations(fileTypes, dataFolder+sampleFolder, dataFolder, imgOpen, imgSave)
-filePath = fo.openFileDialog()
+#fo = FileOperations(fileTypes, str(dataFolder+sampleFolder), dataFolder, imgOpen, imgSave)
+#filePath = fo.openFileDialog()
 
 #Load an image modes: #1/cv2.IMREAD_COLOR #0/cv2.IMREAD_GRAYSCALE #-1/cv2.IMREAD_UNCHANGED
 img = cv2.imread(filePath,1)
@@ -109,6 +109,6 @@ k = cv2.waitKey(0)
 if k == 27:         # wait for ESC key to exit
     cv2.destroyAllWindows()
 elif k == ord('s'): # wait for 's' key to save and exit
-    fo.saveFileDialog(img)
-    #cv2.imwrite(dataFolder+imgSave,img)
+    #fo.saveFileDialog(img)
+    cv2.imwrite(dataFolder+imgSave,img)
     cv2.destroyAllWindows()
