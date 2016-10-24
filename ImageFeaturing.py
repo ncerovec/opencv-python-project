@@ -15,7 +15,7 @@ class FeatureDetection(object):
     #Contours
     @staticmethod
     def detectSqrContours(img):
-        _, contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         return contours
 
     #Draw lines in array
