@@ -40,23 +40,6 @@ print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
 #-> Image processing
 ftrImg = ih.copyImage(img)
 
-#hsv = pc.hsvScale(ftrImg)
-#h,s,v = cv2.split(hsv)
-#v = pg.equHist(v)
-#hsv = cv2.merge((h, s, v))
-#ftrImg = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-blur = pc.medianBlur(ftrImg)
-mean = pc.meanShift(blur)
-colRange = pc.colorRange(mean)
-
-gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
-adpThresh = pg.threshAdptGauss(gray)
-
-res = cv2.bitwise_and(colRange,adpThresh)
-gradient = pg.gradient(res)
-closing = pg.closing(res)
-result = closing
-
 '''
 claColor = pc.claheColor(ftrImg)
 meanShift = pc.meanShift(ftrImg)
@@ -72,6 +55,33 @@ canny = pg.canny(gray)
 result = canny
 '''
 
+blur = pc.medianBlur(ftrImg)
+mean = pc.meanShift(blur)
+colRange = pc.colorRange(mean)
+
+gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
+adpThresh = pg.threshAdptGauss(gray)
+
+res = cv2.bitwise_and(colRange,adpThresh)
+gradient = pg.gradient(colRange)
+closing = pg.closing(gradient)
+result = closing
+
+'''
+blur = pc.bilateralBlur(ftrImg)
+mean = pc.meanShift(blur)
+gray = pc.grayScale(mean)
+
+sobelx8u = cv2.Sobel(gray,cv2.CV_8U,1,0,ksize=5)
+canny = pg.canny(sobelx8u)
+
+adpThresh = pg.threshAdptGauss(gray)
+
+res = np.bitwise_or(canny,adpThresh)
+opening = pg.opening(res)
+result = sobelx8u
+'''
+
 #-> Image feature detection
 dtcImg = ih.copyImage(result)
 
@@ -80,7 +90,7 @@ dtcImg = ih.copyImage(result)
 contours = fd.detectSqrContours(dtcImg)
 #img = fd.drawBiggestContour(img, contours)
 #img = fd.drawContours(img, contours)
-img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.3)
+img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.2)
 #img = fd.drawRatioContours(img, contours, 2, 0.2)
 
 
@@ -93,8 +103,11 @@ img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.3)
 #images = [img, hsv, v, blur, mean, gray, adpThresh]
 titles = ['Original', 'Blur', 'Mean', 'Color-Range', 'Gray', 'Thresh', 'Gradient', 'Closing']
 images = [img, blur, mean, colRange, gray, adpThresh, gradient, closing]
+#titles = ['Original', 'Blur', 'Mean', 'Gray', 'Canny', 'Thresh', 'Canny+Thresh', 'Opening']
+#images = [img, blur, mean, gray, canny, adpThresh, res, opening]
 
 ip.showAdvanced(images, titles)
+#ip.showSimple(images, titles)
 
 img1 = img
 img2 = result

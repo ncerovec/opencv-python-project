@@ -32,15 +32,19 @@ class ProcessingGray(object):
     #Adaptive Gauss Threshold
     @staticmethod
     def threshAdptGauss(img):
+        img_median_val = np.median(img)
         #adptThreshGauss = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        adptThreshGauss = cv2.adaptiveThreshold(img, 230, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 13, 0)
+        adptThreshGauss = cv2.adaptiveThreshold(img, img_median_val, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 13, -1)
         return adptThreshGauss
     
     #Canny filter
     @staticmethod
     def canny(img):
-        #canny = cv2.Canny(img, 50, 200, 3)
-        canny = cv2.Canny(img, 30, 90)
+        sigma = 0.33
+        img_median_val = np.median(img)
+        lower_thresh = int(max(0, (1.0 - sigma) * img_median_val))
+        upper_thresh = int(min(255, (1.0 + sigma) * img_median_val))
+        canny = cv2.Canny(img, lower_thresh, upper_thresh)
         return canny
 
     #Erosion (opposite of dilation) - size of foreground object decreases
@@ -114,6 +118,12 @@ class ProcessingColor(object):
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         return hsv
 
+    #BilateralBlur
+    @staticmethod
+    def bilateralBlur(img):
+        blur = cv2.bilateralFilter(img,9,75,75)
+        return blur
+
     #GaussianBlur
     @staticmethod
     def gaussBlur(img):
@@ -145,8 +155,8 @@ class ProcessingColor(object):
     #MeanShift
     @staticmethod
     def meanShift(img):
-        spatialRadius = 10
-        colorRadius = 10
+        spatialRadius = 30
+        colorRadius = 20
         maxPyrLevel = 3
         meanShift = cv2.pyrMeanShiftFiltering(img, spatialRadius, colorRadius, maxPyrLevel)
         return meanShift

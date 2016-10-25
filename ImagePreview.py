@@ -6,6 +6,15 @@ from ImageHelper import ImageHelper as ih
 
 #Image preview Class
 class ImagePreview(object):
+
+    #OpenCV - Simple Image preview
+    @staticmethod
+    def showSimple(images, titles):
+        img_num = len(images)
+        for i in xrange(img_num):
+            image = images[i]
+            title = titles[i]
+            cv2.imshow(title,image)
         
     #PyPlot - Advanced Image preview
     @staticmethod
