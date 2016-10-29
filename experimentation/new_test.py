@@ -28,6 +28,7 @@ img_adaptive = cv2.equalizeHist(img_adaptive)
 
 img_canny_adaptive = np.bitwise_or(img_canny,img_adaptive)
 
+
 kernel = np.ones((2,2),np.uint8)
 img_opening = cv2.morphologyEx(img_canny_adaptive, cv2.MORPH_OPEN, kernel)
 
