@@ -62,6 +62,7 @@ tpd = TemplateParkingDetection()
 print '1. Parking detection using image filtering'
 print '2. Parking detection using background substraction'
 print '3. Parking detection using background model'
+print '4. Parking detection using templates'
 teqNo = raw_input('Choose detection technique: ')
 
 if(teqNo == '1'):    
@@ -74,10 +75,7 @@ elif(teqNo == '3'):
     #Parking detection using background model
     img = bpd.detectParking(imgSub, emptyFolderPath)
 elif(teqNo == '4'):
-    print 'aaa'
     #Parking detection using background template
-    #cv2.imshow('davidimojeldobro', imgMatch)
-    #cv2.imshow('davidimojeldobroTEMP', imgTemplate)
     img = tpd.detectParking(imgMatch, imgTemplate)
 else:
     print 'Wrong input!'
