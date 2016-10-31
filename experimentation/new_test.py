@@ -32,8 +32,11 @@ img_canny_adaptive = np.bitwise_or(img_canny,img_adaptive)
 kernel = np.ones((2,2),np.uint8)
 img_opening = cv2.morphologyEx(img_canny_adaptive, cv2.MORPH_OPEN, kernel)
 
-#parking_row0 = dilation[5:45, 0:500]
-#cv2.imshow('Roi1', parking_row0)
+contours, hierarchy = cv2.findContours(img_canny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+
+for contour in contours:
+    (x, y, h, w) = cv2.boundingRect(contour)
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
 
 cv2.imshow('Original', img)
