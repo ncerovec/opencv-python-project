@@ -73,7 +73,7 @@ elif(teqNo == '2'):
     img = spd.detectParking(imgSub, imgBG, True)
 elif(teqNo == '3'):
     #Parking detection using background model
-    img = bpd.detectParking(imgSub, emptyFolderPath)
+    img = bpd.detectParking(imgSub, './DATA/PKlot/empty/')
 elif(teqNo == '4'):
     #Parking detection using background template
     img = tpd.detectParking(imgMatch, imgTemplate)
