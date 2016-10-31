@@ -12,8 +12,6 @@ img = cv2.imread(dataFolder+imgName,1)
 
 template = cv2.imread(dataFolder+templateName,0)
 
-cv2.imshow('Tempalte', template)
-
 img_blur = cv2.bilateralFilter(img,9,75,75)
 
 img_mean = cv2.pyrMeanShiftFiltering(img_blur, 30, 20, 3)
@@ -38,6 +36,13 @@ kernel = np.ones((2,2),np.uint8)
 img_opening = cv2.morphologyEx(img_canny_adaptive, cv2.MORPH_OPEN, kernel)
 
 result = cv2.bitwise_and(img_opening, template)
+
+
+x,y,w,h = 0, 12, 14, 33
+parkingspot0 = result[x:x+w, y:y+h]
+parkingspot0_median = np.average(parkingspot0)
+
+if
 
 cv2.imshow('Original', img)
 cv2.imshow('Result', result)
