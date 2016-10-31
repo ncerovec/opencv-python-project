@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt    #from matplotlib import pyplot as plt
 from ParkingDetectionFiltering import FilteringParkingDetection
 from ParkingDetectionSubstraction import SubstractionParkingDetection
 from ParkingDetectionBgSubModel import BgSubModelParkingDetection
-#from ParkingDetectionTemplate import TemplateParkingDetection
+from Darijan import TemplateParkingDetection
 
 #TODO:
     #Order image processing and filtering for best results
@@ -50,14 +50,14 @@ img = cv2.imread(filePath,1)
 imgSub = cv2.imread(filePathSub,1)
 imgBG = cv2.imread(filePathSubBG,1)
 imgSubModel = cv2.imread(filePathImgSubModel,1)
-imgTemplate = cv2.imread(filePathImgTemplate,1)
+imgTemplate = cv2.imread(filePathImgTemplate,0)
 imgMatch = cv2.imread(filePathImgMatch,1)
 
 #Defining parking detection techniques - Class detection
 fpd = FilteringParkingDetection()
 spd = SubstractionParkingDetection()
 bpd = BgSubModelParkingDetection()
-#tpd = TemplateParkingDetection()
+tpd = TemplateParkingDetection()
 
 print '1. Parking detection using image filtering'
 print '2. Parking detection using background substraction'
@@ -74,9 +74,11 @@ elif(teqNo == '3'):
     #Parking detection using background model
     img = bpd.detectParking(imgSub, emptyFolderPath)
 elif(teqNo == '4'):
-    print 'Not implemented!'
+    print 'aaa'
     #Parking detection using background template
-    #img = tpd.detectParking(imgMatch, imgTemplate)
+    #cv2.imshow('davidimojeldobro', imgMatch)
+    #cv2.imshow('davidimojeldobroTEMP', imgTemplate)
+    img = tpd.detectParking(imgMatch, imgTemplate)
 else:
     print 'Wrong input!'
 
