@@ -5,9 +5,14 @@ from random import randint
 print cv2.__version__
 
 imgName = 'parking-sample.jpg'
+templateName = 'template.jpg'
 dataFolder = '../DATA/parking-sample/'
 
 img = cv2.imread(dataFolder+imgName,1)
+
+template = cv2.imread(dataFolder+templateName,0)
+
+cv2.imshow('Tempalte', template)
 
 img_blur = cv2.bilateralFilter(img,9,75,75)
 
@@ -32,15 +37,11 @@ img_canny_adaptive = np.bitwise_or(img_canny,img_adaptive)
 kernel = np.ones((2,2),np.uint8)
 img_opening = cv2.morphologyEx(img_canny_adaptive, cv2.MORPH_OPEN, kernel)
 
-contours, hierarchy = cv2.findContours(img_canny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-
-for contour in contours:
-    (x, y, h, w) = cv2.boundingRect(contour)
-    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+result = cv2.bitwise_and(img_opening, template)
 
 cv2.imshow('Original', img)
-cv2.imshow('All', img_opening)
+cv2.imshow('Result', result)
+
 
 
 k = cv2.waitKey(0)
