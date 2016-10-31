@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt    #from matplotlib import pyplot as plt
 from ParkingDetectionFiltering import FilteringParkingDetection
 from ParkingDetectionSubstraction import SubstractionParkingDetection
 from ParkingDetectionBgSubModel import BgSubModelParkingDetection
-from Darijan import TemplateParkingDetection
+from ParkingDetectionTemplate import TemplateParkingDetection
 
 #TODO:
     #Order image processing and filtering for best results
