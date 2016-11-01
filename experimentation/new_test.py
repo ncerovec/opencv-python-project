@@ -10,7 +10,7 @@ dataFolder = '../DATA/parking-sample/'
 
 img = cv2.imread(dataFolder+imgName,1)
 
-template = cv2.imread(dataFolder+templateName,0)
+template = cv2.imread(dataFolder+templateName,1)
 
 img_blur = cv2.bilateralFilter(img,9,75,75)
 
@@ -34,34 +34,23 @@ img_canny_adaptive = np.bitwise_or(img_canny,img_adaptive)
 kernel = np.ones((2,2),np.uint8)
 img_opening = cv2.morphologyEx(img_canny_adaptive, cv2.MORPH_OPEN, kernel)
 
-template_canny = cv2.threshold(template, 0, 255, cv2.THRESH_BINARY_INV)
-cv2.imshow("template", template_canny)
-contours_template, hierarchy = cv2.findContours(template, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+template_canny = cv2.Canny(template, 50, 100)
 
+contours_template, hierarchy = cv2.findContours(template_canny, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+contour_area_min = 100
 for contour in contours_template:
-    print cv2.contourArea(contour)
-    approx = cv2.approxPolyDP(contour, 0.01*cv2.arcLength(contour, True), True)
-    if len(approx)==4:
-        print "Found one"
-        cv2.drawContours(img, [contour], 0, (0,0,255),-1)
-
-'''
-contour_area_max = 100
-
-for contour in contours_template:
-    if cv2.contourArea(contour)>contour_area_max:
-        x, y, h, w = cv2.boundingRect(contour)
+    if cv2.contourArea(contour)>contour_area_min:
+        x, y, w, h = cv2.boundingRect(contour)
         roi = img_opening[y:y+h, x:x+w]
-        roi_median = np.median(roi)
-        print  roi_median
         roi_average = np.average(roi)
-        print roi_average
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
-'''
+        if (roi_average > 30):
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+        else:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 1)
 
-#cv2.drawContours(img, contours_template, -1,(0,255,0), 1)
 cv2.imshow('Original', img)
-
 
 
 k = cv2.waitKey(0)

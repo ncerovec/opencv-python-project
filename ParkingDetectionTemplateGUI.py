@@ -19,7 +19,7 @@ class TemplateParkingDetection(ParkingDetection):
 
         img = cv2.imread(imgPath)
 
-        template = cv2.imread(templatePath, 0)
+        template = cv2.imread(templatePath, 1)
 
         img_blur = cv2.bilateralFilter(img, 9, 75, 75)
 
@@ -41,20 +41,21 @@ class TemplateParkingDetection(ParkingDetection):
 
         kernel = np.ones((2, 2), np.uint8)
         img_opening = cv2.morphologyEx(img_canny_adaptive, cv2.MORPH_OPEN, kernel)
+        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+        template_canny = cv2.Canny(template, 50, 100)
 
-        result = cv2.bitwise_and(img_opening, template)
+        contours_template, hierarchy = cv2.findContours(template_canny, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-        contours_raw, hierarchy = cv2.findContours(result, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        contours_filtered= []
-        contour_area_min = 20
-        for contour in contours_raw:
-            x, y, w, h = cv2.boundingRect(contour)
-            if (cv2.contourArea(contour) > contour_area_min):
-                contours_filtered.append(contour)
-
-
-        cv2.drawContours(img, contours_filtered, -1, (0, 255, 0), 2)
+        contour_area_min = 100
+        for contour in contours_template:
+            if cv2.contourArea(contour) > contour_area_min:
+                x, y, w, h = cv2.boundingRect(contour)
+                roi = img_opening[y:y + h, x:x + w]
+                roi_average = np.average(roi)
+                if (roi_average > 30):
+                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+                else:
+                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 1)
 
         cv2.imshow("Result", img)
 
