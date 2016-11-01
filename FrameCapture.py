@@ -15,8 +15,13 @@ class FrameCapture():
             cv2.imshow("Video Capture", frame)
 
             if cv2.waitKey(1) & 0xFF == ord('c'):
+                cv2.imwrite(fileName, frame)
+                returnVal = 1
+                break
+            elif cv2.waitKey(1) & 0xFF == ord('q'):
+                returnVal = 0
                 break
 
-        cv2.imwrite(fileName, frame)
         camera.release()
         cv2.destroyAllWindows()
+        return returnVal

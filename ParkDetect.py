@@ -1,7 +1,4 @@
-import Tkinter as tk
-from GUI import GUI
+from mainWindow import mainWindow
 
-
-root = tk.Tk()
-mainWindow = GUI(root)
-root.mainloop()
+app = mainWindow()
+app.mainloop()
