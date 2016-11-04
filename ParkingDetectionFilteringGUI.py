@@ -38,17 +38,32 @@ class FilteringParkingDetection(ParkingDetection):
         result = canny
         '''
 
+        #Best result achieved
+        
         blur = pc.medianBlur(ftrImg)
         mean = pc.meanShift(blur)
-        colRange = pc.colorRange(mean)
+        #colRange = pc.colorRange(mean)
 
         gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
         adpThresh = pg.threshAdptGauss(gray)
 
-        res = cv2.bitwise_and(colRange, adpThresh)
-        gradient = pg.gradient(colRange)
-        closing = pg.closing(gradient)
-        result = closing
+        #res = cv2.bitwise_and(colRange, adpThresh)
+        gradient = pg.gradient(adpThresh)
+        #closing = pg.closing(gradient)
+        result = gradient
+                
+        '''
+        blur = pc.medianBlur(ftrImg)
+        mean = pc.meanShift(blur)
+
+        gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
+        adpThresh = pg.threshAdptGauss(gray)
+
+        opening = pg.opening(adpThresh)
+        erosion = pg.erosion(opening)
+        dilation = pg.dilation(erosion)
+        result = opening
+        '''
 
         '''
         blur = pc.bilateralBlur(ftrImg)
@@ -83,9 +98,9 @@ class FilteringParkingDetection(ParkingDetection):
         return
 
     def parkingSpotSize(self, img):
-        # print "Select parking spot size and press Enter:"
-        # rs = RectSelection(ih.copyImage(img))
-        # rectWidth, rectHeight = rs.getRectSize()
-        rectWidth, rectHeight = 60, 110
+        print "Select parking spot size and press Enter:"
+        rs = RectSelection(ih.copyImage(img))
+        rectWidth, rectHeight = rs.getRectSize()
+        #rectWidth, rectHeight = 60, 110
         print "Parking spot size: " + str(rectWidth) + "x" + str(rectHeight)
         return rectWidth, rectHeight

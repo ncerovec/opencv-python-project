@@ -51,56 +51,70 @@ class ProcessingGray(object):
         #detach two connected objects (removing small white noises)
     @staticmethod
     def erosion(img):
-        kernel = np.ones((3,3),np.uint8)
-        erosion = cv2.erode(img,kernel,iterations = 1)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        erosion = cv2.erode(img,se,iterations = 1)
+        #kernel = np.ones((3,3),np.uint8)
+        #erosion = cv2.erode(img,kernel,iterations = 1)
         return erosion
 
     #Dilation (opposite of erosion) - size of foreground object increases
         #joining broken parts of object
     @staticmethod
     def dilation(img):
-        kernel = np.ones((3,3),np.uint8)
-        dilation = cv2.dilate(img,kernel,iterations = 1)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        dilation = cv2.dilate(img,se,iterations = 1)
+        #kernel = np.ones((3,3),np.uint8)
+        #dilation = cv2.dilate(img,kernel,iterations = 1)
         return dilation
 
     #Opening - Erosion followed by dilation
         #removing noise from and around object
     @staticmethod
     def opening(img):
-        kernel = np.ones((3,3),np.uint8)
-        opening = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        opening = cv2.morphologyEx(img, cv2.MORPH_OPEN, se)
+        #kernel = np.ones((3,3),np.uint8)
+        #opening = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
         return opening
 
     #Closing - Dilation followed by Erosion
         #filling holes of object
     @staticmethod
     def closing(img):
-        kernel = np.ones((3,3),np.uint8)
-        closing = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        closing = cv2.morphologyEx(img, cv2.MORPH_CLOSE, se)
+        #kernel = np.ones((3,3),np.uint8)
+        #closing = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
         return closing
 
     #Morphological Gradient - Difference between dilation and erosion
         #outline of the object
     @staticmethod
     def gradient(img):
-        kernel = np.ones((3,3),np.uint8)
-        gradient = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, kernel)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        gradient = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, se)
+        #kernel = np.ones((2,4),np.uint8)
+        #gradient = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, kernel)
         return gradient
 
     #Top Hat - Substraction of Opening from Original
         #remove minorities of object
     @staticmethod
     def tophat(img):
-        kernel = np.ones((3,3),np.uint8)
-        tophat = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        tophat = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, se)
+        #kernel = np.ones((3,3),np.uint8)
+        #tophat = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
         return tophat
 
     #Black Hat - Substraction of Original from Closing
         #highlight minorities of object
     @staticmethod
     def blackhat(img):
-        kernel = np.ones((3,3),np.uint8)
-        blackhat = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel)
+        se = cv2.getStructuringElement(cv2.MORPH_RECT, (2,4))
+        blackhat = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, se)
+        #kernel = np.ones((3,3),np.uint8)
+        #blackhat = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel)
         return blackhat
 
 #Color image processing Class

@@ -43,8 +43,8 @@ class FilteringParkingDetection(ParkingDetection):
         adpThresh = pg.threshAdptGauss(gray)
 
         res = cv2.bitwise_and(colRange,adpThresh)
-        gradient = pg.gradient(colRange)
-        closing = pg.closing(gradient)
+        gradient = pg.gradient(adpThresh)
+        #closing = pg.closing(gradient)
         result = closing
 
         '''
