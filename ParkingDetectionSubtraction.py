@@ -9,7 +9,7 @@ from ImageProcessing import ProcessingColor as pc
 from ImageFeaturing import FeatureDetection as fd
 from ImagePreview import ImagePreview as ip
 
-class SubstractionParkingDetection(ParkingDetection):
+class SubtractionParkingDetection(ParkingDetection):
 
     def detectParking(self, img, imgBG, showProcess):
         #-> Image processing

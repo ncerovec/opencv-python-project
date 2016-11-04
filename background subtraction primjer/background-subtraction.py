@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt    #from matplotlib import pyplot as plt
 
-from ParkingDetectionSubstraction import SubstractionParkingDetection
+from ParkingDetectionSubtraction import SubtractionParkingDetection
 
 #TODO:
     #Order image processing and filtering for best results

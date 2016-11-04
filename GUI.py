@@ -2,7 +2,7 @@ import Tkinter as tk
 import tkFileDialog
 from ParkingDetectionTemplateGUI import TemplateParkingDetection
 from ParkingDetectionFilteringGUI import FilteringParkingDetection
-from ParkingDetectionSubstractionGUI import SubstractionParkingDetection
+from ParkingDetectionSubtractionGUI import SubtractionParkingDetection
 from ParkingDetectionBgSubModelGUI import BgSubModelParkingDetection
 from FrameCapture import FrameCapture
 
@@ -187,7 +187,7 @@ class uiBasicSub:
             self.filePathImage.set(self.filePathImageVar)
 
     def start_processing(self):
-        spd = SubstractionParkingDetection()
+        spd = SubtractionParkingDetection()
         self.master.withdraw()
         spd.detectParking(self.filePathImageVar, self.fileBackgroundPathVar)
         self.master.deiconify()

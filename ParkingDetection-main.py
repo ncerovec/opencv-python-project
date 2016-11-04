@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt    #from matplotlib import pyplot as plt
 
 from ParkingDetectionFiltering import FilteringParkingDetection
-from ParkingDetectionSubstraction import SubstractionParkingDetection
+from ParkingDetectionSubtraction import SubtractionParkingDetection
 from ParkingDetectionBgSubModel import BgSubModelParkingDetection
 from ParkingDetectionTemplate import TemplateParkingDetection
 
@@ -55,7 +55,7 @@ imgMatch = cv2.imread(filePathImgMatch,1)
 
 #Defining parking detection techniques - Class detection
 fpd = FilteringParkingDetection()
-spd = SubstractionParkingDetection()
+spd = SubtractionParkingDetection()
 bpd = BgSubModelParkingDetection()
 tpd = TemplateParkingDetection()
 
