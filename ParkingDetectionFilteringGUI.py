@@ -13,6 +13,7 @@ from RectSizeSelection import RectSelection
 
 
 class FilteringParkingDetection(ParkingDetection):
+    
     def detectParking(self, imagePath):
         # -> Parking spot size marking
 
@@ -23,7 +24,27 @@ class FilteringParkingDetection(ParkingDetection):
         # -> Image processing
         ftrImg = ih.copyImage(img)
 
+        #Best result achieved - procedure:
+
+        #Bilateral blur on image to preserve edges but reduce noise
+        blur = pc.bilateralBlur(ftrImg)
+
+        #Mean shift filtering to reduce texture effect
+        mean = pc.meanShift(blur)
+
+        #Convert to grayscale
+        gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
+
+        #Use adaptive threshold also based on median to extract as much cars possible
+        adpThresh = pg.threshAdptGauss(gray)
+
+        #Apply morphological gradient to get outline of the objects
+        gradient = pg.gradient(adpThresh)
+        
+        result = gradient
+
         '''
+        #Procedure 1
         claColor = pc.claheColor(ftrImg)
         meanShift = pc.meanShift(ftrImg)
         gray = pc.grayScale(ftrImg)
@@ -37,22 +58,9 @@ class FilteringParkingDetection(ParkingDetection):
         canny = pg.canny(gray)
         result = canny
         '''
-
-        #Best result achieved
-        
-        blur = pc.medianBlur(ftrImg)
-        mean = pc.meanShift(blur)
-        #colRange = pc.colorRange(mean)
-
-        gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
-        adpThresh = pg.threshAdptGauss(gray)
-
-        #res = cv2.bitwise_and(colRange, adpThresh)
-        gradient = pg.gradient(adpThresh)
-        #closing = pg.closing(gradient)
-        result = gradient
                 
         '''
+        #Procedure 2
         blur = pc.medianBlur(ftrImg)
         mean = pc.meanShift(blur)
 
@@ -66,6 +74,7 @@ class FilteringParkingDetection(ParkingDetection):
         '''
 
         '''
+        #Procedure 3
         blur = pc.bilateralBlur(ftrImg)
         mean = pc.meanShift(blur)
         gray = pc.grayScale(mean)
@@ -78,6 +87,21 @@ class FilteringParkingDetection(ParkingDetection):
         res = np.bitwise_or(canny,adpThresh)
         opening = pg.opening(res)
         result = sobelx8u
+        '''
+
+        '''
+        #Procedure 4
+        blur = pc.medianBlur(ftrImg)
+        mean = pc.meanShift(blur)
+        colRange = pc.colorRange(mean)
+
+        gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
+        adpThresh = pg.threshAdptGauss(gray)
+
+        res = cv2.bitwise_and(colRange, adpThresh)
+        gradient = pg.gradient(res)
+        closing = pg.closing(gradient)
+        result = closing
         '''
 
         # -> Image feature detection
@@ -97,6 +121,7 @@ class FilteringParkingDetection(ParkingDetection):
 
         return
 
+    #Method for parking spot size user input
     def parkingSpotSize(self, img):
         print "Select parking spot size and press Enter:"
         rs = RectSelection(ih.copyImage(img))
