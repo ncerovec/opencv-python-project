@@ -1,6 +1,4 @@
 import cv2
-import numpy as np
-import matplotlib.pyplot as plt  # from matplotlib import pyplot as plt
 
 from ParkingDetection import ParkingDetection
 
@@ -14,13 +12,15 @@ from RectSizeSelection import RectSelection
 
 class FilteringParkingDetection(ParkingDetection):
     def detectParking(self, imagePath):
-        # -> Parking spot size marking
 
+        # Load image
         img = cv2.imread(imagePath, 1)
 
+        # Define rectangle of parking spot size - predefined dimensions
+        # User defines size based on image
         rectWidth, rectHeight = self.parkingSpotSize(img)
 
-        # -> Image processing
+        # Create a copy of image
         ftrImg = ih.copyImage(img)
 
         '''
@@ -38,15 +38,18 @@ class FilteringParkingDetection(ParkingDetection):
         result = canny
         '''
 
-        #Best result achieved
-        
+        # Apply median filter and mean shift filtering from processing class
+        # to reduce noise and texture impact
         blur = pc.medianBlur(ftrImg)
         mean = pc.meanShift(blur)
         #colRange = pc.colorRange(mean)
 
+        # Convert to gary and apply adaptive threshold to it
         gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
         adpThresh = pg.threshAdptGauss(gray)
 
+        # Apply morphological gradient on thresholded image
+        # to find boundaries of objects
         #res = cv2.bitwise_and(colRange, adpThresh)
         gradient = pg.gradient(adpThresh)
         #closing = pg.closing(gradient)
@@ -80,16 +83,19 @@ class FilteringParkingDetection(ParkingDetection):
         result = sobelx8u
         '''
 
-        # -> Image feature detection
+        # Copy image
         dtcImg = ih.copyImage(result)
 
         # img = fd.drawLines(img, fd.detectLines(dtcImg))
 
+        # Find all contours in the image
         contours = fd.detectSqrContours(dtcImg)
         # img = fd.drawBiggestContour(img, contours)
         # img = fd.drawContours(img, contours)
+        # Draw only contours with parking spot dimensions +- 20% tolerance
         img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.2)
         # img = fd.drawRatioContours(img, contours, 2, 0.2)
+
 
         cv2.imshow('comparison', ip.stackImages(img, result))
         cv2.waitKey()
@@ -97,6 +103,8 @@ class FilteringParkingDetection(ParkingDetection):
 
         return
 
+
+    # Function returns rectangle dimensions based on user input
     def parkingSpotSize(self, img):
         print "Select parking spot size and press Enter:"
         rs = RectSelection(ih.copyImage(img))
