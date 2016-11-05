@@ -23,6 +23,21 @@ class FilteringParkingDetection(ParkingDetection):
         # Create a copy of image
         ftrImg = ih.copyImage(img)
 
+        '''
+        claColor = pc.claheColor(ftrImg)
+        meanShift = pc.meanShift(ftrImg)
+        gray = pc.grayScale(ftrImg)
+        equ = pg.equHist(gray)
+        claGray = pg.claheGray(gray)
+        thresh = pg.threshOtsu(gray)
+        adptThreshMean = pg.threshAdptMean(gray)
+        adptThreshGauss = pg.threshAdptGauss(gray)
+        dilation = pg.dilation(thresh)
+        closing = pg.closing(thresh)
+        canny = pg.canny(gray)
+        result = canny
+        '''
+
         # Apply median filter and mean shift filtering from processing class
         # to reduce noise and texture impact
         blur = pc.medianBlur(ftrImg)
@@ -40,6 +55,34 @@ class FilteringParkingDetection(ParkingDetection):
         #closing = pg.closing(gradient)
         result = gradient
                 
+        '''
+        blur = pc.medianBlur(ftrImg)
+        mean = pc.meanShift(blur)
+
+        gray = cv2.cvtColor(mean, cv2.COLOR_BGR2GRAY)
+        adpThresh = pg.threshAdptGauss(gray)
+
+        opening = pg.opening(adpThresh)
+        erosion = pg.erosion(opening)
+        dilation = pg.dilation(erosion)
+        result = opening
+        '''
+
+        '''
+        blur = pc.bilateralBlur(ftrImg)
+        mean = pc.meanShift(blur)
+        gray = pc.grayScale(mean)
+
+        sobelx8u = cv2.Sobel(gray,cv2.CV_8U,1,0,ksize=5)
+        canny = pg.canny(sobelx8u)
+
+        adpThresh = pg.threshAdptGauss(gray)
+
+        res = np.bitwise_or(canny,adpThresh)
+        opening = pg.opening(res)
+        result = sobelx8u
+        '''
+
         # Copy image
         dtcImg = ih.copyImage(result)
 
@@ -52,6 +95,7 @@ class FilteringParkingDetection(ParkingDetection):
         # Draw only contours with parking spot dimensions +- 20% tolerance
         img = fd.drawSizedContours(img, contours, rectWidth, rectHeight, 0.2)
         # img = fd.drawRatioContours(img, contours, 2, 0.2)
+
 
         cv2.imshow('comparison', ip.stackImages(img, result))
         cv2.waitKey()
